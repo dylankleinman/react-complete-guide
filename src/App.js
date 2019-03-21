@@ -9,7 +9,8 @@ class App extends Component {
       {name: 'kleinma', age: 28},
       {name: 'chloe', age: 1000}
     ],
-    otherState: 'some other state'
+    otherState: 'some other state',
+    showPersons: false,
   }
 
   switchNameHandler = (newName) => {
@@ -24,14 +25,13 @@ class App extends Component {
     })
   }
 
-  nameChangedHandler = (event) => {
-    this.setState({
-      persons: [
-        {name: 'Dylan', age: 321},
-        {name: event.target.value, age: 28},
-        {name: 'chloe', age: 22, height:'im really short'}
-      ]
-    })
+  deletePersonHandler = (personIndex) => {
+    console.log('hello');
+  }
+
+  togglePersonsHandler = () => {
+    const doesShow = this.state.showPersons;
+    this.setState({showPersons: !doesShow});
   }
 
   render() {
@@ -43,27 +43,27 @@ class App extends Component {
       cursor: 'pointer',
     };
 
+    let persons = null;
+
+    if (this.state.showPersons){
+      persons = (
+        <div>
+          {this.state.persons.map(
+            (person, index) => {
+              return <Person click={this.deletePersonHandler(index)} name={person.name} age={person.age}/>
+            }
+          )}
+
+        </div>
+      )
+    };
+
     return (
       <div className="App">
         <h1> Hi, I'm a react app </h1>
         <p>this is working!</p>
-        <button style={style} onClick={() => this.switchNameHandler('DYLANKLEINMAN')}>Switch Name</button>
-        <Person
-          name={this.state.persons[0].name}
-           age ={this.state.persons[0].age}
-           height = {this.state.persons[0].height}
-        />
-        <Person
-          name={this.state.persons[1].name}
-          age ={this.state.persons[1].age}
-          click = {this.switchNameHandler.bind(this, 'DYLAN!!!')}
-          changed={this.nameChangedHandler}>
-          My hobbies: Surfing
-        </Person>
-        <Person
-          name={this.state.persons[2].name}
-          age ={this.state.persons[2].age}
-        />
+        <button style={style} onClick={this.togglePersonsHandler}>Toggle Persons</button>
+        {persons}
       </div>
     );
     //this code above will be compiled exactly the same as this code below:
