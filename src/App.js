@@ -5,9 +5,9 @@ import Person from './Person/Person'
 class App extends Component {
   state = {
     persons: [
-      {name: 'Dylan', age: 22, height:511},
-      {name: 'kleinma', age: 28},
-      {name: 'chloe', age: 1000}
+      {id:'lkja;lsd' ,name: 'Dylan', age: 22, height:511},
+      {id:'lkjasdf', name: 'kleinma', age: 28},
+      {id: 'jahlskjdf', name: 'chloe', age: 1000}
     ],
     otherState: 'some other state',
     showPersons: false,
@@ -25,8 +25,29 @@ class App extends Component {
     })
   }
 
+  nameChangedHandler = (event, id) => {
+    //use the id passed through the input box to match which index of the persons list is the person that has our id
+    // the personIndex variable will hold the index of person we are looking for
+    const personIndex = this.state.persons.findIndex(p => {
+      return p.id === id;
+    });
+    //set person variable to a copy (..., not a pointer) of our person with certain index in persons array
+    const person = {...this.state.persons[personIndex]};
+    //alternative const person =  Object.assign({}, this.state.persons[personIndex])
+    //set the name of this person to the target value
+    person.name = event.target.value;
+    // create new object with values of persons array, use ... to not have a pointer and mutate original array
+    const persons = [...this.state.persons];
+    persons[personIndex] = person
+    //after changing person with index [personIndex] set state to new array
+    this.setState({persons: persons});
+  }
+
   deletePersonHandler = (personIndex) => {
-    const persons = this.state.persons;
+    //console.log(personIndex);
+    //const persons = this.state.persons.slice();
+    const persons = [...this.state.persons]; //this and the slice above do the same thing.
+    //It is immportant to create a new object, without using slice you are just making a pointer to the list/object.  this is called immutable.
     persons.splice(personIndex, 1);
     this.setState({persons: persons});
   }
@@ -54,10 +75,11 @@ class App extends Component {
               return <Person
                 click={() => this.deletePersonHandler(index)}
                 name={person.name}
-                age={person.age}/>
+                age={person.age}
+                key={person.id}
+                changed={(event) => this.nameChangedHandler(event, person.id)}/>
             }
           )}
-
         </div>
       )
     };
