@@ -1,10 +1,14 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useContext} from 'react';
 import classes from './Cockpit.css';
+import AuthContext from '../../context/auth-context';
 
 //this is a functional component, not a class based.  Use useEffect to copy lifestyle hooks
 const cockpit = (props) => {
 
   const toggleBtnRef = useRef(null);
+  const authContext = useContext(AuthContext);
+
+  console.log(authContext.authenticatd);
 
   useEffect(() => {
     console.log('[Cockpit.js] useEffect');
@@ -42,7 +46,7 @@ const cockpit = (props) => {
       <h1>{props.title}</h1>
       <p className={assignedClasses.join(' ')}>this is working!</p>
       <button ref={toggleBtnRef} className = {btnClass} onClick={props.clicked}>Toggle Persons</button>
-      <button onClick={props.login}>Log in</button>
+      <button onClick={authContext.login}>Log in</button>
     </div>
   );
 }
